@@ -1120,14 +1120,19 @@ async def publish_giveaway(callback: CallbackQuery, state: FSMContext):
         cursor = await db.execute("INSERT INTO giveaways (creator_id, text, entities_json, media_type, file_id, "
                                   "buttons_json, channel_id, entry_fee_stars, captcha_mode, is_active, created_at) "
                                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
-                                  (user_id, data["text"], json.dumps(data.get("entities", [])),
+                                  (user_id, data["text"],
+                                   json.dumps([e.model_dump() if hasattr(e, "model_dump") else e for e in data.get("entities", [])]),
                                    data["media_type"], data.get("file_id"),
-                                   json.dumps(data.get("buttons", [])),
+                                   json.dumps([
+                                       {**{k: v for k, v in btn.items() if k != "entities"},
+                                        "entities": [e.model_dump() if hasattr(e, "model_dump") else e for e in btn.get("entities", [])]}
+                                       for btn in data.get("buttons", [])
+                                   ]),
                                    data["channel_id"], data["entry_fee"], data.get("captcha_mode", "basic"),
                                    datetime.now().isoformat()))
         giveaway_id = cursor.lastrowid
         await db.commit()
-    # Публикуем в канал
+
     await post_to_channel(giveaway_id, data["channel_id"], data["text"], data.get("entities", []),
                           data["media_type"], data.get("file_id"), data.get("buttons", []),
                           data["entry_fee"], data.get("captcha_mode", "basic"))
@@ -1540,10 +1545,15 @@ async def on_startup(app: web.Application) -> None:
     logging.info("Webhook configured at %s", WEBHOOK_URL)
 
 
+async def index_handler(request):
+    return web.FileResponse(STATIC_DIR / "index.html")
+
+
 if __name__ == "__main__":
     app = web.Application()
     app["bot"] = bot
     app["dp"] = dp
+    app.router.add_get("/", index_handler)
     app.router.add_static("/", str(STATIC_DIR), name="static")
 
     webhook_requests_handler = SimpleRequestHandler(
