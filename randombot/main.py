@@ -1542,7 +1542,7 @@ async def main():
     app = web.Application()
     app["bot"] = bot
     app["dp"] = dp
-    app.router.add_static("/", str(STATIC_DIR), name="static", index="index.html")
+    app.router.add_static("/", str(STATIC_DIR), name="static")
 
     webhook_requests_handler = SimpleRequestHandler(
         dispatcher=dp,
