@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#6c5ce7" />
+    <title>Creator Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="app-shell">
+      <section class="view dashboard-view active">
+        <header class="hero">
+          <div class="hero-text">
+            <p class="eyebrow">Telegram Mini App</p>
+            <h1>Creator Dashboard</h1>
+            <p class="subtitle">Управляйте розыгрышами, безопасностью и монетизацией из одного места.</p>
+            <div class="sticker-stack" aria-hidden="true">
+              <div class="sticker sticker-a">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.2 4.5L19 8.2l-3.6 3.5 1 4.9L12 14.9 7.6 16.6l1-4.9L5 8.2l4.8-.7L12 3z"/></svg>
+              </div>
+              <div class="sticker sticker-b">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 4L6 13h4l-1 7 7-9h-4l1-7z"/></svg>
+              </div>
+              <div class="sticker sticker-c">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c3.3 0 6 2.7 6 6 0 3.3-2.7 6-6 6S6 13.3 6 10c0-3.3 2.7-6 6-6zm0 2c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"/></svg>
+              </div>
+              <div class="sticker sticker-d">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <img id="avatar" src="" alt="avatar" />
+            <div>
+              <div id="profileName" class="profile-name">Загрузка...</div>
+              <div id="profileHandle" class="profile-handle">@user</div>
+            </div>
+          </div>
+        </header>
+
+        <section class="stats-grid">
+          <article class="card accent">
+            <div class="card-title">Активные розыгрыши</div>
+            <div class="metric" id="activeGiveaways">0</div>
+          </article>
+          <article class="card">
+            <div class="card-title">Доход за месяц</div>
+            <div class="metric" id="monthlyIncome">0 ⭐</div>
+          </article>
+          <article class="card">
+            <div class="card-title">Защита</div>
+            <div class="metric" id="securityMode">Strict</div>
+          </article>
+        </section>
+
+        <section class="actions">
+          <button class="btn primary" id="createGiveawayBtn">
+            <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg></span>
+            <span>Создать розыгрыш</span>
+          </button>
+          <button class="btn secondary" id="boostBtn">
+            <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M13 2L5 14h5l-1 8 8-12h-5l1-8z"/></svg></span>
+            <span>Boost</span>
+          </button>
+          <button class="btn secondary" id="featuredBtn">
+            <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8 1 5.3L12 15.4 7.1 17.8l1-5.3L4.2 8.7l5.4-.8L12 3z"/></svg></span>
+            <span>Featured</span>
+          </button>
+          <button class="btn secondary" id="premiumBtn">
+            <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.5-2.8 8.2-7 10-4.2-1.8-7-5.5-7-10V7l7-4z"/></svg></span>
+            <span>Premium</span>
+          </button>
+          <button class="btn secondary" id="settingsBtn">
+            <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M12 8.5A3.5 3.5 0 1 0 15.5 12 3.5 3.5 0 0 0 12 8.5zm8 3.5h-1.1a7.6 7.6 0 0 0-.4-1l.8-.8a1 1 0 0 0 0-1.4l-1.4-1.4a1 1 0 0 0-1.4 0l-.8.8a7.6 7.6 0 0 0-1-.4V4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1.1a7.6 7.6 0 0 0-1 .4l-.8-.8a1 1 0 0 0-1.4 0L5.2 5.2a1 1 0 0 0 0 1.4l.8.8a7.6 7.6 0 0 0-.4 1H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h1.1a7.6 7.6 0 0 0 .4 1l-.8.8a1 1 0 0 0 0 1.4l1.4 1.4a1 1 0 0 0 1.4 0l.8-.8a7.6 7.6 0 0 0 1 .4V20a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-1.1a7.6 7.6 0 0 0 1-.4l.8.8a1 1 0 0 0 1.4 0l1.4-1.4a1 1 0 0 0 0-1.4l-.8-.8a7.6 7.6 0 0 0 .4-1H20a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1z"/></svg></span>
+            <span>Настройки</span>
+          </button>
+          <button class="btn secondary" id="statsBtn">
+            <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M5 19V9m7 10V5m7 14v-7"/></svg></span>
+            <span>Статистика</span>
+          </button>
+        </section>
+
+        <section class="panel">
+          <h2>Платные функции</h2>
+          <div class="feature-list">
+            <div class="feature-item"><span class="feature-label"><span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M13 2L5 14h5l-1 8 8-12h-5l1-8z"/></svg></span>Boost</span><strong>100 ⭐</strong></div>
+            <div class="feature-item"><span class="feature-label"><span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8 1 5.3L12 15.4 7.1 17.8l1-5.3L4.2 8.7l5.4-.8L12 3z"/></svg></span>Featured</span><strong>150 ⭐</strong></div>
+            <div class="feature-item"><span class="feature-label"><span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M13 2L6 13h4l-1 7 7-9h-4l1-7z"/></svg></span>Fast Click</span><strong>80 ⭐</strong></div>
+            <div class="feature-item"><span class="feature-label"><span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.5-2.8 8.2-7 10-4.2-1.8-7-5.5-7-10V7l7-4z"/></svg></span>Premium captcha</span><strong>120 ⭐</strong></div>
+          </div>
+        </section>
+
+        <section class="panel payment-panel">
+          <h2>Оплата</h2>
+          <div class="payment-grid">
+            <button class="pay-card" data-payment="stars">
+              <span class="pay-icon"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8 1 5.3L12 15.4 7.1 17.8l1-5.3L4.2 8.7l5.4-.8L12 3z"/></svg></span>
+              <span>Telegram Stars</span>
+            </button>
+            <button class="pay-card" data-payment="crypto">
+              <span class="pay-icon"><svg viewBox="0 0 24 24"><path d="M12 3v5m0 8v5m-5-5h10"/></svg></span>
+              <span>CryptoBot</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Статистика розыгрышей</h2>
+          <div class="chart-card">
+            <div class="bar" style="height: 65%"></div>
+            <div class="bar" style="height: 84%"></div>
+            <div class="bar" style="height: 53%"></div>
+            <div class="bar" style="height: 92%"></div>
+            <div class="bar" style="height: 74%"></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view premium-view">
+        <div class="premium-hero">
+          <div>
+            <p class="eyebrow">Premium</p>
+            <h2>Сделайте ваши розыгрыши по-настоящему премиальными ✨</h2>
+            <p class="subtitle">Boost, Featured, Fast Click и Premium captcha — всё в одном красивом и живом опыте.</p>
+          </div>
+          <div class="premium-badge">💎 Pro</div>
+        </div>
+
+        <div class="premium-grid">
+          <article class="premium-card premium-card-accent">
+            <div class="premium-icon"><svg viewBox="0 0 24 24"><path d="M13 2L5 14h5l-1 8 8-12h-5l1-8z"/></svg></div>
+            <h3>Boost</h3>
+            <p>Поднимите розыгрыш в топ и получите больше участия.</p>
+            <div class="premium-price">100 ⭐</div>
+            <button class="btn primary premium-action" data-plan="boost" data-payment="stars">Купить за Stars</button>
+          </article>
+          <article class="premium-card">
+            <div class="premium-icon"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8 1 5.3L12 15.4 7.1 17.8l1-5.3L4.2 8.7l5.4-.8L12 3z"/></svg></div>
+            <h3>Featured</h3>
+            <p>Выделите розыгрыш яркой карточкой и захватите внимание.</p>
+            <div class="premium-price">150 ⭐</div>
+            <button class="btn secondary premium-action" data-plan="featured" data-payment="crypto">Купить через Crypto</button>
+          </article>
+          <article class="premium-card">
+            <div class="premium-icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.5-2.8 8.2-7 10-4.2-1.8-7-5.5-7-10V7l7-4z"/></svg></div>
+            <h3>Premium captcha</h3>
+            <p>Добавьте защиту от ботов и сделайте участие честным.</p>
+            <div class="premium-price">120 ⭐</div>
+            <button class="btn secondary premium-action" data-plan="premium_captcha" data-payment="stars">Купить за Stars</button>
+          </article>
+        </div>
+
+        <div class="premium-footer">
+          <button class="btn secondary" id="backToDashboardBtn">← Назад в дашборд</button>
+        </div>
+      </section>
+
+      <section class="view settings-view">
+        <div class="panel settings-panel">
+          <div class="settings-header">
+            <div>
+              <p class="eyebrow">Settings</p>
+              <h2>Насройки мини-приложения</h2>
+            </div>
+            <button class="icon-btn" id="closeSettingsBtn" aria-label="Закрыть настройки">
+              <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <div class="settings-card">
+            <div class="setting-row">
+              <div>
+                <h3>Автоматическая тема</h3>
+                <p>Следует цветовой схеме Telegram.</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="themeAutoToggle" checked /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <h3>Вибро отклик</h3>
+                <p>Тактильные реакции при нажатии.</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="hapticsToggle" checked /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <h3>Анимации</h3>
+                <p>Плавные переходы и микро-движения.</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="animationsToggle" checked /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row compact-row">
+              <div>
+                <h3>Текущая тема</h3>
+                <p id="themeStatusText">Синхронизация с Telegram</p>
+              </div>
+              <div class="pill" id="themePill">Auto</div>
+            </div>
+          </div>
+          <button class="btn secondary" id="backToDashboardFromSettingsBtn">← Назад</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="loading-screen" id="loadingScreen" aria-hidden="true">
+      <div class="spinner"></div>
+      <div class="loading-text">Подготавливаем оплату…</div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
