@@ -990,15 +990,18 @@ async def finish_buttons(callback: CallbackQuery, state: FSMContext):
     await choose_channel_step(callback.message, state)
 
 async def choose_channel_step(message: Message, state: FSMContext):
-    # Заглушка: список каналов из БД (упрощённо)
-    channels = [(-1001234567890, "Мой канал")]
     kb = InlineKeyboardBuilder()
-    for ch_id, name in channels:
-        kb.add(InlineKeyboardButton(text=name, callback_data=f"chosen_{ch_id}"))
     kb.add(InlineKeyboardButton(text="🔙 Назад", callback_data="back_to_buttons_question"))
+    kb.add(InlineKeyboardButton(text="❌ Отмена", callback_data="cancel"))
     kb.adjust(1)
     await state.set_state(GiveawayCreation.channel)
-    await message.answer("📢 <b>Шаг 4/6:</b> Выберите канал:", reply_markup=kb.as_markup())
+    await message.answer(
+        "📢 <b>Шаг 4/6:</b> Введите ID канала, в который хотите опубликовать розыгрыш.\n\n"
+        "Канальные ID — отрицательные числа вида <code>-1001234567890</code>.\n"
+        "Чтобы узнать ID канала, перешлите любое сообщение из него боту @username_to_id_bot "
+        "или добавьте бота в канал как администратора.",
+        reply_markup=kb.as_markup()
+    )
 
 @dp.callback_query(GiveawayCreation.channel, F.data.startswith("chosen_"))
 async def channel_chosen(callback: CallbackQuery, state: FSMContext):
@@ -1009,6 +1012,33 @@ async def channel_chosen(callback: CallbackQuery, state: FSMContext):
         "💰 <b>Шаг 5/6:</b> Установите плату за вход (в звёздах). 0 — бесплатно.",
         reply_markup=cancel_back_kb("back_to_channel")
     )
+
+@dp.message(GiveawayCreation.channel)
+async def channel_id_input(message: Message, state: FSMContext):
+    raw = message.text.strip() if message.text else ""
+    # Channel IDs are negative integers, typically starting with -100
+    if not raw.lstrip("-").isdigit():
+        await message.answer(
+            "❌ Некорректный ID канала. Введите отрицательное число, например: <code>-1001234567890</code>",
+            reply_markup=cancel_back_kb("back_to_buttons_question")
+        )
+        return
+    channel_id = int(raw)
+    if channel_id >= 0:
+        await message.answer(
+            "❌ ID канала должен быть отрицательным числом, например: <code>-1001234567890</code>",
+            reply_markup=cancel_back_kb("back_to_buttons_question")
+        )
+        return
+    await state.update_data(channel_id=channel_id)
+    await state.set_state(GiveawayCreation.fee)
+    await message.answer(
+        f"✅ Канал <code>{channel_id}</code> выбран.\n\n"
+        "💰 <b>Шаг 5/6:</b> Установите плату за вход (в звёздах). 0 — бесплатно.",
+        reply_markup=cancel_back_kb("back_to_channel")
+    )
+
+
 
 @dp.message(GiveawayCreation.fee)
 async def fee_input(message: Message, state: FSMContext):
