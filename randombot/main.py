@@ -1526,8 +1526,7 @@ async def forceclose_giveaway(callback: CallbackQuery):
     await callback.message.edit_text(f"✅ Розыгрыш #{giveaway_id} закрыт.")
 
 
-# ====================== ЗАПУСК ======================
-async def main():
+async def on_startup(app: web.Application) -> None:
     await init_db()
     if not BOT_TOKEN:
         logging.error("BOT_TOKEN is not set. Configure environment variables before launching the bot.")
@@ -1538,7 +1537,10 @@ async def main():
         secret_token=WEBHOOK_SECRET_TOKEN or None,
         drop_pending_updates=True,
     )
+    logging.info("Webhook configured at %s", WEBHOOK_URL)
 
+
+if __name__ == "__main__":
     app = web.Application()
     app["bot"] = bot
     app["dp"] = dp
@@ -1552,8 +1554,6 @@ async def main():
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
 
-    logging.info("Webhook configured at %s", WEBHOOK_URL)
-    web.run_app(app, host="0.0.0.0", port=PORT)
+    app.on_startup.append(on_startup)
 
-if __name__ == "__main__":
-    asyncio.run(main())
+    web.run_app(app, host="0.0.0.0", port=PORT)
