@@ -75,13 +75,66 @@ function savePreferences() {
   localStorage.setItem('creator-miniapp-settings', JSON.stringify(preferences));
 }
 
+function getOrientation() {
+  if (screen.orientation && screen.orientation.type) {
+    return screen.orientation.type.startsWith('landscape') ? 'landscape' : 'portrait';
+  }
+  return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+}
+
+function refreshLayout() {
+  const orientation = getOrientation();
+  document.documentElement.dataset.orientation = orientation;
+  document.body.dataset.orientation = orientation;
+
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+  if (tg) {
+    tg.expand();
+  }
+
+  // Force reflow so layout (grids/flex directions driven by CSS media queries)
+  // recalculates immediately instead of waiting for the next paint.
+  const appShell = document.querySelector('.app-shell');
+  if (appShell) {
+    void appShell.offsetHeight;
+  }
+
+  // Make sure all interactive elements stay within the visible viewport
+  // in the new orientation.
+  document.querySelectorAll('.btn, .icon-btn, .pay-card, .premium-action').forEach((el) => {
+    el.style.maxWidth = '100%';
+  });
+}
+
+function handleOrientationChange() {
+  // Give the browser a moment to finish resizing before recalculating layout.
+  window.setTimeout(refreshLayout, 100);
+  window.setTimeout(refreshLayout, 400);
+}
+
+window.addEventListener('orientationchange', handleOrientationChange);
+window.addEventListener('resize', () => {
+  window.clearTimeout(handleOrientationChange.resizeTimeout);
+  handleOrientationChange.resizeTimeout = window.setTimeout(refreshLayout, 150);
+});
+if (screen.orientation && screen.orientation.addEventListener) {
+  screen.orientation.addEventListener('change', handleOrientationChange);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   loadPreferences();
+  refreshLayout();
   if (tg) {
     tg.ready();
     tg.expand();
     tg.enableClosingConfirmation();
+    if (tg.onEvent) {
+      tg.onEvent('viewportChanged', refreshLayout);
+    }
   }
+
 
   const user = tg?.initDataUnsafe?.user || {};
   const avatar = document.getElementById('avatar');
